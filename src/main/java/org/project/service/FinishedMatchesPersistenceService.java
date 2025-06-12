@@ -1,5 +1,26 @@
 package org.project.service;
 
+import java.util.List;
+
+import org.project.model.FinishedMatch;
+import org.project.repository.FinishedMatchRepository;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
+@Service
 public class FinishedMatchesPersistenceService {
+    private static final int PAGE_SIZE = 10;
+        private final FinishedMatchRepository finishedMatchRepository;
+        @Autowired
+        public FinishedMatchesPersistenceService(FinishedMatchRepository finishedMatchRepository) {
+            this.finishedMatchRepository = finishedMatchRepository;
+        }
+        
+        public List<FinishedMatch> getFinishedMatches(int pageNumber, String playerName) {
+            return finishedMatchRepository.findAll(PageRequest.of(pageNumber - 1, PAGE_SIZE)).getContent()
+            .stream().
+            filter(match -> match.getPlayer1().getName().equals(playerName) || match.getPlayer2().getName().equals(playerName)).toList();
+    }
     
 }
