@@ -93,7 +93,7 @@ public class MatchScoreCalculationService {
             match.setCountGamesPlayer1(0);
             match.setCountGamesPlayer2(0);
         }else if ((match.getCountGamesPlayer2() > 6 && (match.getCountGamesPlayer2() - match.getCountGamesPlayer1() >= 2))){
-            match.setCountSetsPlayer1(match.getCountSetsPlayer2() + 1);
+            match.setCountSetsPlayer2(match.getCountSetsPlayer2() + 1);
             System.out.println("ASasfsadasf\n\n\n\n\n\n\n\n");
             match.setScorePlayer1(0);
             match.setScorePlayer2(0);

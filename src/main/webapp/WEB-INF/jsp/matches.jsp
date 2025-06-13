@@ -37,24 +37,20 @@
                 <c:forEach items="${matches}" var="match">
                     <div class="match-card">
                         <div class="match-header">
-                            <h3>${match.player1Name} vs ${match.player2Name}</h3>
-                            <span class="match-status ${match.finished ? 'finished' : 'ongoing'}">
-                                ${match.finished ? 'Finished' : 'Ongoing'}
+                            <h3>${match.player1.name} vs ${match.player2.name}</h3>
+                            <span class="match-status finished">
+                                Finished
                             </span>
                         </div>
                         <div class="match-score">
                             <div class="player-score">
-                                <span class="player-name">${match.player1Name}</span>
-                                <span class="score">${match.countSetsPlayer1} - ${match.countGamesPlayer1} - ${match.scorePlayer1}</span>
+                                <span class="player-name">${match.player1.name}</span>
+                                <span class="winner-name-td">${match.winner.name}</span>
                             </div>
                             <div class="player-score">
-                                <span class="player-name">${match.player2Name}</span>
-                                <span class="score">${match.countSetsPlayer2} - ${match.countGamesPlayer2} - ${match.scorePlayer2}</span>
+                                <span class="player-name">${match.player2.name}</span>
                             </div>
                         </div>
-                        <c:if test="${!match.finished}">
-                            <a href="${pageContext.request.contextPath}/match-score?uuid=${match.id}" class="button">Continue Match</a>
-                        </c:if>
                     </div>
                 </c:forEach>
             </div>
