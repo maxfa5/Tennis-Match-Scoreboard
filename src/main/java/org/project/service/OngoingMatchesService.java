@@ -6,24 +6,22 @@ import org.project.model.FinishedMatch;
 import org.project.model.OngoingMatch;
 import org.project.model.Player;
 import org.project.repository.FinishedMatchRepository;
-import org.project.repository.PLayerRepository;
+import org.project.repository.PlayerRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.HashMap;
 import java.util.List;
 import java.util.UUID;
+import java.util.concurrent.ConcurrentHashMap;
 
 @Service
 public class OngoingMatchesService {
-    private HashMap<UUID, OngoingMatch> ongoingMatches = new HashMap<>();
-    private PLayerRepository playerRepository;
-    private FinishedMatchRepository finishedMatchRepository;
+    private ConcurrentHashMap<UUID, OngoingMatch> ongoingMatches = new ConcurrentHashMap<>();
+    private PlayerRepository playerRepository;
     private static final int PAGE_SIZE = 10;
     @Autowired
-    public OngoingMatchesService(PLayerRepository playerRepository, FinishedMatchRepository finishedMatchRepository) {
+    public OngoingMatchesService(PlayerRepository playerRepository) {
         this.playerRepository = playerRepository;
-        this.finishedMatchRepository = finishedMatchRepository;
     }
     
     public OngoingMatch getOngoingMatch(UUID matchId) {
@@ -48,47 +46,14 @@ public class OngoingMatchesService {
         return match;
     }
 
-    public boolean IncrementScore(IncrementScoreDTO incrementScoreDTO) {
-        OngoingMatch match = getOngoingMatch(incrementScoreDTO.getMatchId());
-        if (match == null) {
-            throw new RuntimeException("Match not found");
-        }
-
-        match.setScorePlayer1(match.getScorePlayer1() + incrementScoreDTO.getAddToPLayer1());
-        match.setScorePlayer2(match.getScorePlayer2() + incrementScoreDTO.getAddToPLayer2());
-        System.out.println("Score updated - Player1: " + incrementScoreDTO.getAddToPLayer1() + ", Player2: " + incrementScoreDTO.getAddToPLayer2());
-
-        if (checkIfMatchIsOver(match)) {
-            Player player1 = playerRepository.findByName(match.getPlayer1Name());
-            Player player2 = playerRepository.findByName(match.getPlayer2Name());
-            Player winner = playerRepository.findByName(solveWinnerName(match));
-            
-            FinishedMatch finishedMatch = new FinishedMatch(player1, player2, winner);
-            finishedMatchRepository.save(finishedMatch);
-            ongoingMatches.remove(match.getId());
-            return true;
-        }
-        return false;
-    }
-
-    private boolean checkIfMatchIsOver(OngoingMatch match) {
-        return match.getScorePlayer1() >= 11 || match.getScorePlayer2() >= 11;
-    }
-
-    private String solveWinnerName(OngoingMatch match) {
-        if (match.getScorePlayer1() >= 11) {
-            return match.getPlayer1Name();
-        } else if (match.getScorePlayer2() >= 11) {
-            return match.getPlayer2Name();
-        }
-        return null;
-    }
-
     public List<OngoingMatch> getOngoingMatches(int number, String playerName) {
         return ongoingMatches.values().stream()
         .filter(match -> match.getPlayer1Name().equals(playerName) || match.getPlayer2Name().equals(playerName))
         .skip((number - 1) * PAGE_SIZE)
         .limit(PAGE_SIZE)
         .toList();
+    }
+    public void removeMatch(UUID matchId){
+        ongoingMatches.remove(matchId);
     }
 }

@@ -1,6 +1,7 @@
 package org.project.controller;
 
 import org.project.service.FinishedMatchesPersistenceService;
+import org.project.service.MatchScoreCalculationService;
 import org.project.service.OngoingMatchesService;
 
 import java.util.List;
@@ -18,14 +19,18 @@ import org.springframework.web.bind.annotation.RequestParam;
 
 import org.springframework.web.bind.annotation.RestController;
 
+import com.fasterxml.jackson.databind.deser.DataFormatReaders.Match;
+
 @RestController
 public class MatchScoreController {
     private final OngoingMatchesService ongoingMatchesService;
+    private final MatchScoreCalculationService matchScoreCalculationService;
     private final FinishedMatchesPersistenceService finishedMatchesPersistenceService;
     @Autowired
-    public MatchScoreController(OngoingMatchesService ongoingMatchesService, FinishedMatchesPersistenceService finishedMatchesPersistenceService){
+    public MatchScoreController(OngoingMatchesService ongoingMatchesService, FinishedMatchesPersistenceService finishedMatchesPersistenceService, MatchScoreCalculationService matchScoreCalculationService){
         this.ongoingMatchesService =ongoingMatchesService;
         this.finishedMatchesPersistenceService = finishedMatchesPersistenceService;
+        this.matchScoreCalculationService = matchScoreCalculationService;
     }
 
     @PostMapping("/new-match")
@@ -39,7 +44,7 @@ public class MatchScoreController {
 
     @PostMapping("/match-score")
     public String IncrementScore(@RequestBody IncrementScoreDTO incrementScoreDTO){
-        if(ongoingMatchesService.IncrementScore(incrementScoreDTO)){
+        if(matchScoreCalculationService.IncrementScore(incrementScoreDTO)){
             return "Match finished";
         } else {
             return "Match not finished";
@@ -47,9 +52,9 @@ public class MatchScoreController {
     }
 
     @GetMapping("/matches")
-    public List<OngoingMatch> getMatches(
+    public List<FinishedMatch> getMatches(
             @RequestParam(value = "page", defaultValue = "1", required = false) int pageNumber,
             @RequestParam(value = "filter_by_player_name", required = false) String playerName) {
-        return ongoingMatchesService.getOngoingMatches(pageNumber, playerName);
+        return finishedMatchesPersistenceService.getFinishedMatches(pageNumber, playerName);
     }
 }
