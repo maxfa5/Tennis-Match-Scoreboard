@@ -26,9 +26,12 @@ public class FinishedMatchesPersistenceService {
         }
         
         public List<FinishedMatch> getFinishedMatches(int pageNumber, String playerName) {
+            if (playerName.equals("")) {
+                return finishedMatchRepository.findAll(PageRequest.of(pageNumber - 1, PAGE_SIZE)).getContent();
+            }else{
             return finishedMatchRepository.findAll(PageRequest.of(pageNumber - 1, PAGE_SIZE)).getContent()
             .stream().
-            filter(match -> match.getPlayer1().getName().equals(playerName) || match.getPlayer2().getName().equals(playerName)).toList();
+            filter(match -> match.getPlayer1().getName().equals(playerName) || match.getPlayer2().getName().equals(playerName)).toList();}
     }
 
     public FinishedMatch finishMatch(OngoingMatch match, Player winner){

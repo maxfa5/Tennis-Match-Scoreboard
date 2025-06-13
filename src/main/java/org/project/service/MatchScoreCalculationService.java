@@ -11,6 +11,9 @@ public class MatchScoreCalculationService {
     private final OngoingMatchesService ongoingMatchesService;
     private final PlayerRepository playerRepository;
     private final FinishedMatchesPersistenceService finishedMatchesPersistenceService;
+    private boolean isTiebreak = false;
+    private int tiebreakServiceCount = 0;
+    private int tiebreakPointCount = 0;
 
     @Autowired
     MatchScoreCalculationService(OngoingMatchesService ongoingMatchesService, PlayerRepository playerRepository, FinishedMatchesPersistenceService finishedMatchesPersistenceService) {
@@ -24,24 +27,60 @@ public class MatchScoreCalculationService {
         if (match == null) {
             throw new RuntimeException("Match not found");
         }
-        int scoreVal1PLayer = match.getScorePlayer1();
-        int scoreVal2PLayer = match.getScorePlayer2();
-        //score
-        if ((scoreVal1PLayer==0|| scoreVal1PLayer==15) && incrementScoreDTO.getAddToPLayer1()==1) {
-            match.setScorePlayer1( scoreVal1PLayer + 15);
-        }else if ((scoreVal2PLayer==0 || scoreVal2PLayer==15) && incrementScoreDTO.getAddToPLayer2()==1) {
-            match.setScorePlayer2( scoreVal2PLayer + 15);
-        }else if (incrementScoreDTO.getAddToPLayer1()==1) {
-            match.setScorePlayer1( scoreVal1PLayer + 10);
-        }else if (incrementScoreDTO.getAddToPLayer2()==1) {
-            match.setScorePlayer2( scoreVal2PLayer + 10);
+
+        // Check if we need to start a tiebreak
+        if (!isTiebreak && match.getCountGamesPlayer1() == 6 && match.getCountGamesPlayer2() == 6) {
+            isTiebreak = true;
+            tiebreakServiceCount = 0;
+            tiebreakPointCount = 0;
         }
+
+        if (isTiebreak) {
+            // Handle tiebreak scoring
+            if (incrementScoreDTO.getAddToPLayer1() == 1) {
+                match.setScorePlayer1(match.getScorePlayer1() + 1);
+            } else if (incrementScoreDTO.getAddToPLayer2() == 1) {
+                match.setScorePlayer2(match.getScorePlayer2() + 1);
+            }
+            tiebreakPointCount++;
+
+            // Check for tiebreak win
+            if ((match.getScorePlayer1() >= 7 && match.getScorePlayer1() - match.getScorePlayer2() >= 2) ||
+                (match.getScorePlayer2() >= 7 && match.getScorePlayer2() - match.getScorePlayer1() >= 2)) {
+                // Award the set to the winner
+                if (match.getScorePlayer1() > match.getScorePlayer2()) {
+                    match.setCountSetsPlayer1(match.getCountSetsPlayer1() + 1);
+                } else {
+                    match.setCountSetsPlayer2(match.getCountSetsPlayer2() + 1);
+                }
+                // Reset scores and games for the new set
+                isTiebreak = false;
+                match.setScorePlayer1(0);
+                match.setScorePlayer2(0);
+                match.setCountGamesPlayer1(0);
+                match.setCountGamesPlayer2(0);
+            }
+        } else {
+            int scoreVal1PLayer = match.getScorePlayer1();
+            int scoreVal2PLayer = match.getScorePlayer2();
+            //score
+            if ((scoreVal1PLayer==0|| scoreVal1PLayer==15) && incrementScoreDTO.getAddToPLayer1()==1) {
+                match.setScorePlayer1( scoreVal1PLayer + 15);
+            }else if ((scoreVal2PLayer==0 || scoreVal2PLayer==15) && incrementScoreDTO.getAddToPLayer2()==1) {
+                match.setScorePlayer2( scoreVal2PLayer + 15);
+            }else if (incrementScoreDTO.getAddToPLayer1()==1) {
+                match.setScorePlayer1( scoreVal1PLayer + 10);
+            }else if (incrementScoreDTO.getAddToPLayer2()==1) {
+                match.setScorePlayer2( scoreVal2PLayer + 10);
+            }
+        }
+
         //games
-        if(match.getScorePlayer1() > 40 &&(match.getScorePlayer1() - match.getScorePlayer2() >= 20) ){
+        if(!isTiebreak && match.getScorePlayer1() > 40 &&(match.getScorePlayer1() - match.getScorePlayer2() >= 20) ){
             match.setCountGamesPlayer1(match.getCountGamesPlayer1() + 1);
             match.setScorePlayer1(0);
             match.setScorePlayer2(0);
-        }else if(match.getScorePlayer2() > 40 &&(match.getScorePlayer2() - match.getScorePlayer1() >= 20) ){
+        }else if(!isTiebreak && match.getScorePlayer2() > 40 &&(match.getScorePlayer2() - match.getScorePlayer1() >= 20) ){
             match.setCountGamesPlayer2(match.getCountGamesPlayer2() + 1);
             match.setScorePlayer1(0);
             match.setScorePlayer2(0);
@@ -55,6 +94,7 @@ public class MatchScoreCalculationService {
             match.setCountGamesPlayer2(0);
         }else if ((match.getCountGamesPlayer2() > 6 && (match.getCountGamesPlayer2() - match.getCountGamesPlayer1() >= 2))){
             match.setCountSetsPlayer1(match.getCountSetsPlayer2() + 1);
+            System.out.println("ASasfsadasf\n\n\n\n\n\n\n\n");
             match.setScorePlayer1(0);
             match.setScorePlayer2(0);
             match.setCountGamesPlayer1(0);

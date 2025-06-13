@@ -9,8 +9,10 @@ import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 @Data
+@NoArgsConstructor
 @Entity
 public class FinishedMatch {
     public FinishedMatch(Player player1, Player player2, Player winner) {

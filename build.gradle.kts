@@ -15,6 +15,12 @@ dependencies {
     implementation("org.springframework.boot:spring-boot-starter-web")
     implementation("org.springframework.boot:spring-boot-starter-data-jpa")
     
+    // JSP support
+    implementation("org.apache.tomcat.embed:tomcat-embed-jasper")
+    implementation("jakarta.servlet.jsp.jstl:jakarta.servlet.jsp.jstl-api")
+    implementation("org.glassfish.web:jakarta.servlet.jsp.jstl")
+    implementation("jakarta.servlet:jakarta.servlet-api")
+    
     // Hibernate
     implementation("org.hibernate.orm:hibernate-core:6.4.4.Final")
     implementation("org.hibernate.orm:hibernate-community-dialects:6.4.4.Final")
