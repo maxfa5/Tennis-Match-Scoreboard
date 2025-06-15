@@ -51,9 +51,14 @@ public class MatchScoreController {
 
     @PostMapping("/new-match")
     @ResponseBody
-    public OngoingMatch createNewMatch(@RequestBody CreateMatchDTO createMatchDTO){
-        OngoingMatch match = ongoingMatchesService.createNewMatch(createMatchDTO);
-        System.out.println(match);
+    public OngoingMatch createNewMatch(@RequestBody CreateMatchDTO createMatchDTO) throws Exception{
+        OngoingMatch match;
+        try {
+            match = ongoingMatchesService.createNewMatch(createMatchDTO);   
+        } catch (Exception e) {
+            System.out.println(e.toString());
+            return null;
+        }
         return ongoingMatchesService.getOngoingMatch(match.getId());
     }
 

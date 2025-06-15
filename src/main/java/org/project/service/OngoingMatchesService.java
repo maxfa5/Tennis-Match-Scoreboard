@@ -28,17 +28,27 @@ public class OngoingMatchesService {
         return ongoingMatches.get(matchId);
     }
 
-    public OngoingMatch createNewMatch(CreateMatchDTO createMatchDTO) {
+    public OngoingMatch createNewMatch(CreateMatchDTO createMatchDTO) throws Exception {
         Player player1 = playerRepository.findByName(createMatchDTO.getPlayerName1());
         if (player1 == null) {
             player1 = new Player(createMatchDTO.getPlayerName1());
+            if (player1.getName().length() >=41) {
+                throw new Exception("Слишком длинный ник игрока >40 - запрещён");
+            }
             player1 = playerRepository.save(player1);
         }
 
         Player player2 = playerRepository.findByName(createMatchDTO.getPlayerName2());
         if (player2 == null) {
             player2 = new Player(createMatchDTO.getPlayerName2());
+            if (player2.getName().length() >=41) {
+                throw new Exception("Слишком длинный ник игрока >40 - запрещён");
+            }
             player2 = playerRepository.save(player2);
+        }
+        if (player1.getName().equals(player2.getName())) {
+            throw new Exception("у игроков одинаковые имена");
+            
         }
         
         OngoingMatch match = new OngoingMatch(player1.getName(), player2.getName());
