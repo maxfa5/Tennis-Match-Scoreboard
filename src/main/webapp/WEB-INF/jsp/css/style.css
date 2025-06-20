@@ -1,0 +1,159 @@
+.score-legend {
+    background-color: #f8f9fa;
+    border-radius: 12px;
+    padding: 20px;
+    margin: 20px 0;
+    display: flex;
+    justify-content: space-around;
+    flex-wrap: wrap;
+    gap: 20px;
+}
+
+.legend-item {
+    flex: 1;
+    min-width: 200px;
+}
+
+.legend-item h3 {
+    color: #42a7f5;
+    margin-bottom: 10px;
+    font-size: 18px;
+}
+
+.legend-item ul {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+.legend-item li {
+    margin-bottom: 5px;
+    font-size: 16px;
+}
+
+.legend-item p {
+    font-size: 16px;
+    line-height: 1.4;
+}
+
+.score-section {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin: 0 10px;
+}
+
+.score-label {
+    font-size: 14px;
+    color: #666;
+    margin-top: 5px;
+}
+
+@media (max-width: 768px) {
+    .score-legend {
+        flex-direction: column;
+        gap: 15px;
+    }
+    
+    .legend-item {
+        min-width: 100%;
+    }
+}
+
+.matches-container {
+    padding: 20px;
+}
+
+.matches-list {
+    display: flex;
+    flex-direction: column;
+    gap: 0;
+    margin-top: 20px;
+    border: 1px solid #eee;
+    border-radius: 12px;
+    overflow: hidden;
+}
+
+.match-card {
+    border-color: #42a7f5;
+    background-color: #fff;
+    padding: 20px;
+    border-bottom: 1px solid #eee;
+}
+
+.match-card:last-child {
+    border-bottom: none;
+}
+
+.match-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 15px;
+    padding-bottom: 10px;
+    border-bottom: 1px solid #eee;
+}
+
+.match-header h3 {
+    margin: 0;
+    font-size: 18px;
+    color: #333;
+}
+
+.match-status {
+    padding: 4px 12px;
+    border-radius: 20px;
+    font-size: 14px;
+    font-weight: 500;
+}
+
+.match-status.finished {
+    background-color: #e8f5e9;
+    color: #2e7d32;
+}
+
+.match-content {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.player-result {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 8px 0;
+}
+
+.player-name {
+    font-size: 16px;
+    color: #333;
+}
+
+.winner-indicator {
+    font-size: 14px;
+    color: #666;
+}
+
+.winner-indicator.winner {
+    color: #2e7d32;
+    font-weight: 500;
+}
+
+@media (max-width: 768px) {
+    .matches-container {
+        padding: 15px;
+    }
+    
+    .match-card {
+        padding: 15px;
+    }
+    
+    .match-header h3 {
+        font-size: 16px;
+    }
+    
+    .player-name {
+        font-size: 14px;
+    }
+} 

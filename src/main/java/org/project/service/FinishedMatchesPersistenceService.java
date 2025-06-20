@@ -15,7 +15,7 @@ import org.springframework.stereotype.Service;
 public class FinishedMatchesPersistenceService {
     private final  OngoingMatchesService ongoingMatchesService;
     private final PlayerRepository playerRepository;
-    private static final int PAGE_SIZE = 10;
+    private static final int PAGE_SIZE = 5;
         private final FinishedMatchRepository finishedMatchRepository;
 
         @Autowired

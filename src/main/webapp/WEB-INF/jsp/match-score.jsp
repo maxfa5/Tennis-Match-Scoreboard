@@ -33,30 +33,68 @@
     <div class="container">
         <div class="match-score-container">
             <h1>Match Score</h1>
+            <div class="score-legend">
+                <div class="legend-item">
+                    <h3>Points:</h3>
+                    <ul>
+                        <li>0 - Love</li>
+                        <li>15 - Fifteen</li>
+                        <li>30 - Thirty</li>
+                        <li>40 - Forty</li>
+                        <li>AD - Advantage</li>
+                    </ul>
+                </div>
+                <div class="legend-item">
+                    <h3>Games:</h3>
+                    <p>First player to win 4 points with a 2-point lead wins a game</p>
+                </div>
+                <div class="legend-item">
+                    <h3>Sets:</h3>
+                    <p>First player to win 6 games with a 2-game lead wins a set</p>
+                </div>
+            </div>
             <div class="score-board">
                 <div class="player player-one">
                     <h2>${match.player1Name}</h2>
                     <div class="score">
-                        <div class="sets">
-                            <c:forEach begin="1" end="${match.countSetsPlayer1}" varStatus="loop">
-                                <div class="set won">${loop.index}</div>
-                            </c:forEach>
+                        <div class="score-section">
+                            <div class="sets">
+                                <c:forEach begin="1" end="${match.countSetsPlayer1}" varStatus="loop">
+                                    <div class="set won">${loop.index}</div>
+                                </c:forEach>
+                            </div>
+                            <div class="score-label">Sets</div>
                         </div>
-                        <div class="games">${match.countGamesPlayer1}</div>
-                        <div class="points">${match.scorePlayer1}</div>
+                        <div class="score-section">
+                            <div class="games">${match.countGamesPlayer1}</div>
+                            <div class="score-label">Games</div>
+                        </div>
+                        <div class="score-section">
+                            <div class="points">${match.scorePlayer1}</div>
+                            <div class="score-label">Points</div>
+                        </div>
                     </div>
                     <button class="score-button" onclick="incrementScore('${match.id}', 1)">+</button>
                 </div>
                 <div class="player player-two">
                     <h2>${match.player2Name}</h2>
                     <div class="score">
-                        <div class="sets">
-                            <c:forEach begin="1" end="${match.countSetsPlayer2}" varStatus="loop">
-                                <div class="set won">${loop.index}</div>
-                            </c:forEach>
+                        <div class="score-section">
+                            <div class="sets">
+                                <c:forEach begin="1" end="${match.countSetsPlayer2}" varStatus="loop">
+                                    <div class="set won">${loop.index}</div>
+                                </c:forEach>
+                            </div>
+                            <div class="score-label">Sets</div>
                         </div>
-                        <div class="games">${match.countGamesPlayer2}</div>
-                        <div class="points">${match.scorePlayer2}</div>
+                        <div class="score-section">
+                            <div class="games">${match.countGamesPlayer2}</div>
+                            <div class="score-label">Games</div>
+                        </div>
+                        <div class="score-section">
+                            <div class="points">${match.scorePlayer2}</div>
+                            <div class="score-label">Points</div>
+                        </div>
                     </div>
                     <button class="score-button" onclick="incrementScore('${match.id}', 2)">+</button>
                 </div>

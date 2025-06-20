@@ -101,6 +101,9 @@ public class MatchScoreController {
             @RequestParam(value = "filter_by_player_name", defaultValue = "", required = false) String playerName) {
         List<FinishedMatch> matches = finishedMatchesPersistenceService.getFinishedMatches(pageNumber, playerName);
         model.addAttribute("matches", matches);
+        model.addAttribute("pageNumber", pageNumber);
+        boolean hasNextPage = matches.size() == 5;
+        model.addAttribute("hasNextPage", hasNextPage);
         return "matches";
     }
 }

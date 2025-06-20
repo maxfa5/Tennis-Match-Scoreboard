@@ -38,21 +38,34 @@
                     <div class="match-card">
                         <div class="match-header">
                             <h3>${match.player1.name} vs ${match.player2.name}</h3>
-                            <span class="match-status finished">
-                                Finished
-                            </span>
+                            <span class="match-status finished">Finished</span>
                         </div>
-                        <div class="match-score">
-                            <div class="player-score">
+                        <div class="match-content">
+                            <div class="player-result">
                                 <span class="player-name">${match.player1.name}</span>
-                                <span class="winner-name-td">${match.winner.name}</span>
+                                <span class="winner-indicator ${match.winner.name eq match.player1.name ? 'winner' : ''}">
+                                    ${match.winner.name eq match.player1.name ? 'Winner' : ''}
+                                </span>
                             </div>
-                            <div class="player-score">
+                            <div class="player-result">
                                 <span class="player-name">${match.player2.name}</span>
+                                <span class="winner-indicator ${match.winner.name eq match.player2.name ? 'winner' : ''}">
+                                    ${match.winner.name eq match.player2.name ? 'Winner' : ''}
+                                </span>
                             </div>
                         </div>
                     </div>
                 </c:forEach>
+            </div>
+            <!-- Пагинация -->
+            <div class="pagination">
+                <c:if test="${pageNumber > 1}">
+                    <a class="pagination-btn" href="${pageContext.request.contextPath}/matches?page=${pageNumber - 1}">Назад</a>
+                </c:if>
+                <span>Страница ${pageNumber}</span>
+                <c:if test="${hasNextPage}">
+                    <a class="pagination-btn" href="${pageContext.request.contextPath}/matches?page=${pageNumber + 1}">Вперёд</a>
+                </c:if>
             </div>
         </div>
     </div>

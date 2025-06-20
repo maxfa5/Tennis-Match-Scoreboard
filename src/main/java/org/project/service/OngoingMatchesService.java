@@ -18,7 +18,6 @@ import java.util.concurrent.ConcurrentHashMap;
 public class OngoingMatchesService {
     private ConcurrentHashMap<UUID, OngoingMatch> ongoingMatches = new ConcurrentHashMap<>();
     private PlayerRepository playerRepository;
-    private static final int PAGE_SIZE = 10;
     @Autowired
     public OngoingMatchesService(PlayerRepository playerRepository) {
         this.playerRepository = playerRepository;
@@ -56,13 +55,13 @@ public class OngoingMatchesService {
         return match;
     }
 
-    public List<OngoingMatch> getOngoingMatches(int number, String playerName) {
-        return ongoingMatches.values().stream()
-        .filter(match -> match.getPlayer1Name().equals(playerName) || match.getPlayer2Name().equals(playerName))
-        .skip((number - 1) * PAGE_SIZE)
-        .limit(PAGE_SIZE)
-        .toList();
-    }
+    // public List<OngoingMatch> getOngoingMatches(int number, String playerName) {
+    //     return ongoingMatches.values().stream()
+    //     .filter(match -> match.getPlayer1Name().equals(playerName) || match.getPlayer2Name().equals(playerName))
+    //     .skip((number - 1) * PAGE_SIZE)
+    //     .limit(PAGE_SIZE)
+    //     .toList();
+    // }
     public void removeMatch(UUID matchId){
         ongoingMatches.remove(matchId);
     }
