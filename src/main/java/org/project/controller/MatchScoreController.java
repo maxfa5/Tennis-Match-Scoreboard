@@ -102,6 +102,7 @@ public class MatchScoreController {
         List<FinishedMatch> matches = finishedMatchesPersistenceService.getFinishedMatches(pageNumber, playerName);
         model.addAttribute("matches", matches);
         model.addAttribute("pageNumber", pageNumber);
+        model.addAttribute("playerName", playerName);
         boolean hasNextPage = matches.size() == 5;
         model.addAttribute("hasNextPage", hasNextPage);
         return "matches";

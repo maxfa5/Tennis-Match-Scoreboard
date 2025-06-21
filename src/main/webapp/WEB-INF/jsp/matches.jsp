@@ -33,6 +33,25 @@
     <div class="container">
         <div class="matches-container">
             <h1>Matches</h1>
+            
+            <!-- Форма поиска -->
+            <div class="search-container">
+                <form class="search-form" method="GET" action="${pageContext.request.contextPath}/matches">
+                    <div class="search-input-group">
+                        <input type="text" 
+                               name="filter_by_player_name" 
+                               value="${playerName}" 
+                               placeholder="Поиск по имени игрока..." 
+                               class="search-input">
+                        <button type="submit" class="search-btn">
+                        </button>
+                    </div>
+                    <c:if test="${not empty playerName}">
+                        <a href="${pageContext.request.contextPath}/matches" class="clear-search">Очистить поиск</a>
+                    </c:if>
+                </form>
+            </div>
+            
             <div class="matches-list">
                 <c:forEach items="${matches}" var="match">
                     <div class="match-card">
@@ -60,11 +79,11 @@
             <!-- Пагинация -->
             <div class="pagination">
                 <c:if test="${pageNumber > 1}">
-                    <a class="pagination-btn" href="${pageContext.request.contextPath}/matches?page=${pageNumber - 1}">Назад</a>
+                    <a class="pagination-btn" href="${pageContext.request.contextPath}/matches?page=${pageNumber - 1}&filter_by_player_name=${playerName}">Назад</a>
                 </c:if>
                 <span>Страница ${pageNumber}</span>
                 <c:if test="${hasNextPage}">
-                    <a class="pagination-btn" href="${pageContext.request.contextPath}/matches?page=${pageNumber + 1}">Вперёд</a>
+                    <a class="pagination-btn" href="${pageContext.request.contextPath}/matches?page=${pageNumber + 1}&filter_by_player_name=${playerName}">Вперёд</a>
                 </c:if>
             </div>
         </div>
