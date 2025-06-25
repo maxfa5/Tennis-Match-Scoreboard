@@ -50,7 +50,7 @@ class MatchScoreCalculationServiceTest {
         assertFalse(result); // Матч не закончен
         assertEquals(15, testMatch.getScorePlayer1());
         assertEquals(0, testMatch.getScorePlayer2());
-        verify(ongoingMatchesService).getOngoingMatch(matchId);
+        verify(ongoingMatchesService, times(1)).getOngoingMatch(matchId);
     }
 
     @Test
@@ -70,7 +70,7 @@ class MatchScoreCalculationServiceTest {
         assertFalse(result); // Матч не закончен
         assertEquals(0, testMatch.getScorePlayer1());
         assertEquals(15, testMatch.getScorePlayer2());
-        verify(ongoingMatchesService).getOngoingMatch(matchId);
+        verify(ongoingMatchesService, times(1)).getOngoingMatch(matchId);
     }
 
     @Test
@@ -121,5 +121,131 @@ result2 = matchScoreCalculationService.IncrementScore(dto2);
         matchScoreCalculationService.setGames(testMatch, 6, 6);
         when(ongoingMatchesService.getOngoingMatch(matchId)).thenReturn(testMatch);
         assertTrue(matchScoreCalculationService.isTiebreak(ongoingMatchesService.getOngoingMatch(matchId)));
+    }
+
+    @Test
+    @DisplayName("При счёте 6-6  тайбрейк продолжается счёт по 1 очку")
+    void shouldReturnTrueWhenTiebreakStarted2() {
+        // Given
+        matchScoreCalculationService.setGames(testMatch, 6, 6);
+        IncrementScoreDTO dto = new IncrementScoreDTO();
+        dto.setMatchId(matchId);
+        dto.setAddToPLayer1(1);
+        dto.setAddToPLayer2(0);
+        when(ongoingMatchesService.getOngoingMatch(matchId)).thenReturn(testMatch);
+        boolean result = matchScoreCalculationService.IncrementScore(dto);
+        assertFalse(result);
+        assertEquals(1, testMatch.getScorePlayer1());
+        assertEquals(0, testMatch.getScorePlayer2());
+
+        when(ongoingMatchesService.getOngoingMatch(matchId)).thenReturn(testMatch);
+        assertTrue(matchScoreCalculationService.isTiebreak(ongoingMatchesService.getOngoingMatch(matchId)));
+
+    }
+
+    @Test
+    @DisplayName("тайбрейк завершается при разрыве в 2 очка")
+    void shouldReturnTrueWhenTiebreakFinished() {
+        // Given
+        matchScoreCalculationService.setGames(testMatch, 7, 6);
+        IncrementScoreDTO dto = new IncrementScoreDTO();
+        dto.setMatchId(matchId);
+        dto.setAddToPLayer1(1);
+        dto.setAddToPLayer2(0);
+        when(ongoingMatchesService.getOngoingMatch(matchId)).thenReturn(testMatch);
+
+        boolean result = matchScoreCalculationService.IncrementScore(dto);
+        result = matchScoreCalculationService.IncrementScore(dto);
+        result = matchScoreCalculationService.IncrementScore(dto);
+        result = matchScoreCalculationService.IncrementScore(dto);
+        result = matchScoreCalculationService.IncrementScore(dto);
+        result = matchScoreCalculationService.IncrementScore(dto);
+        result = matchScoreCalculationService.IncrementScore(dto);
+
+        assertFalse(result);
+        assertEquals(1, testMatch.getCountSetsPlayer1());
+        assertEquals(0, testMatch.getCountSetsPlayer2());
+
+
+    }
+
+    @Test
+    @DisplayName("тайбрейк завершается при разрыве в 2 очка")
+    void shouldReturnTrueWhenTiebreakFinished2Player() {
+        // Given
+        matchScoreCalculationService.setGames(testMatch, 6, 7);
+        IncrementScoreDTO dto = new IncrementScoreDTO();
+        dto.setMatchId(matchId);
+        dto.setAddToPLayer1(0);
+        dto.setAddToPLayer2(1);
+        when(ongoingMatchesService.getOngoingMatch(matchId)).thenReturn(testMatch);
+
+        boolean result = matchScoreCalculationService.IncrementScore(dto);
+        result = matchScoreCalculationService.IncrementScore(dto);
+        result = matchScoreCalculationService.IncrementScore(dto);
+        result = matchScoreCalculationService.IncrementScore(dto);
+        result = matchScoreCalculationService.IncrementScore(dto);
+        result = matchScoreCalculationService.IncrementScore(dto);
+        result = matchScoreCalculationService.IncrementScore(dto);
+
+        assertFalse(result);
+        assertEquals(0, testMatch.getCountSetsPlayer1());
+        assertEquals(1, testMatch.getCountSetsPlayer2());
+
+
+    }
+
+    
+    @Test
+    @DisplayName("подсчёт сетов для игрока 1")
+    void shouldReturnTrueWhenSetsCounted() {
+        // Given
+        matchScoreCalculationService.setGames(testMatch, 6, 5);
+        IncrementScoreDTO dto = new IncrementScoreDTO();
+        dto.setMatchId(matchId);
+        dto.setAddToPLayer1(1);
+        dto.setAddToPLayer2(0);
+        when(ongoingMatchesService.getOngoingMatch(matchId)).thenReturn(testMatch);
+
+        boolean result = matchScoreCalculationService.IncrementScore(dto);
+        result = matchScoreCalculationService.IncrementScore(dto);
+        result = matchScoreCalculationService.IncrementScore(dto);
+        result = matchScoreCalculationService.IncrementScore(dto);
+        result = matchScoreCalculationService.IncrementScore(dto);
+        result = matchScoreCalculationService.IncrementScore(dto);
+        result = matchScoreCalculationService.IncrementScore(dto);
+
+        assertFalse(result);
+        assertEquals(1, testMatch.getCountSetsPlayer1());
+        assertEquals(0, testMatch.getCountSetsPlayer2());
+
+
+    }
+
+        
+    @Test
+    @DisplayName("подсчёт сетов для игрока 2")
+    void shouldReturnTrueWhenSetsCounted2() {
+        // Given
+        matchScoreCalculationService.setGames(testMatch, 5, 6);
+        IncrementScoreDTO dto = new IncrementScoreDTO();
+        dto.setMatchId(matchId);
+        dto.setAddToPLayer1(0);
+        dto.setAddToPLayer2(1);
+        when(ongoingMatchesService.getOngoingMatch(matchId)).thenReturn(testMatch);
+
+        boolean result = matchScoreCalculationService.IncrementScore(dto);
+        result = matchScoreCalculationService.IncrementScore(dto);
+        result = matchScoreCalculationService.IncrementScore(dto);
+        result = matchScoreCalculationService.IncrementScore(dto);
+        result = matchScoreCalculationService.IncrementScore(dto);
+        result = matchScoreCalculationService.IncrementScore(dto);
+        result = matchScoreCalculationService.IncrementScore(dto);
+
+        assertFalse(result);
+        assertEquals(0, testMatch.getCountSetsPlayer1());
+        assertEquals(1, testMatch.getCountSetsPlayer2());
+
+
     }
 } 

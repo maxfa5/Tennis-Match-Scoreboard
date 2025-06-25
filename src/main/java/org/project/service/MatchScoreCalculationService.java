@@ -19,12 +19,12 @@ public class MatchScoreCalculationService {
     }
     
     public boolean IncrementScore(IncrementScoreDTO incrementScoreDTO) {
-        boolean isTiebreak = isTiebreak(ongoingMatchesService.getOngoingMatch(incrementScoreDTO.getMatchId()));
-
-        OngoingMatch match = ongoingMatchesService.getOngoingMatch(incrementScoreDTO.getMatchId());
-        if (match == null) {
-            throw new RuntimeException("Match not found");
-        }
+        
+                OngoingMatch match = ongoingMatchesService.getOngoingMatch(incrementScoreDTO.getMatchId());
+                if (match == null) {
+                    throw new RuntimeException("Match not found");
+                }
+        boolean isTiebreak = isTiebreak(match);
 
         // Check if we need to start a tiebreak
         if (!isTiebreak && match.getCountGamesPlayer1() == 6 && match.getCountGamesPlayer2() == 6) {
