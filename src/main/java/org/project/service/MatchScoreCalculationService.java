@@ -11,10 +11,6 @@ public class MatchScoreCalculationService {
     private final OngoingMatchesService ongoingMatchesService;
     private final PlayerRepository playerRepository;
     private final FinishedMatchesPersistenceService finishedMatchesPersistenceService;
-    private boolean isTiebreak = false;
-    private int tiebreakServiceCount = 0;
-    private int tiebreakPointCount = 0;
-
     @Autowired
     MatchScoreCalculationService(OngoingMatchesService ongoingMatchesService, PlayerRepository playerRepository, FinishedMatchesPersistenceService finishedMatchesPersistenceService) {
         this.ongoingMatchesService = ongoingMatchesService;
@@ -23,6 +19,8 @@ public class MatchScoreCalculationService {
     }
     
     public boolean IncrementScore(IncrementScoreDTO incrementScoreDTO) {
+        boolean isTiebreak = isTiebreak(ongoingMatchesService.getOngoingMatch(incrementScoreDTO.getMatchId()));
+
         OngoingMatch match = ongoingMatchesService.getOngoingMatch(incrementScoreDTO.getMatchId());
         if (match == null) {
             throw new RuntimeException("Match not found");
@@ -31,8 +29,7 @@ public class MatchScoreCalculationService {
         // Check if we need to start a tiebreak
         if (!isTiebreak && match.getCountGamesPlayer1() == 6 && match.getCountGamesPlayer2() == 6) {
             isTiebreak = true;
-            tiebreakServiceCount = 0;
-            tiebreakPointCount = 0;
+
         }
 
         if (isTiebreak) {
@@ -42,7 +39,6 @@ public class MatchScoreCalculationService {
             } else if (incrementScoreDTO.getAddToPLayer2() == 1) {
                 match.setScorePlayer2(match.getScorePlayer2() + 1);
             }
-            tiebreakPointCount++;
 
             // Check for tiebreak win
             if ((match.getScorePlayer1() >= 7 && match.getScorePlayer1() - match.getScorePlayer2() >= 2) ||
@@ -94,7 +90,6 @@ public class MatchScoreCalculationService {
             match.setCountGamesPlayer2(0);
         }else if ((match.getCountGamesPlayer2() > 6 && (match.getCountGamesPlayer2() - match.getCountGamesPlayer1() >= 2))){
             match.setCountSetsPlayer2(match.getCountSetsPlayer2() + 1);
-            System.out.println("ASasfsadasf\n\n\n\n\n\n\n\n");
             match.setScorePlayer1(0);
             match.setScorePlayer2(0);
             match.setCountGamesPlayer1(0);
@@ -107,6 +102,18 @@ public class MatchScoreCalculationService {
         }
         return false;
     }
+    public boolean isTiebreak(OngoingMatch match) {
+        if (match.getCountGamesPlayer1() >= 6 && match.getCountGamesPlayer2() >= 6 && (match.getCountGamesPlayer1() - match.getCountGamesPlayer2() < 2 && match.getCountGamesPlayer2() - match.getCountGamesPlayer1() < 2)) {
+            return true;
+        }
+        return false;
+    }
+
+    public void setGames(OngoingMatch match, int countGamesPlayer1, int countGamesPlayer2) {
+        match.setCountGamesPlayer1(countGamesPlayer1);
+        match.setCountGamesPlayer2(countGamesPlayer2);
+    }
+
 
     private boolean checkIfMatchIsOver(OngoingMatch match) {
         if ((match.getCountSetsPlayer1() > 1 || (match.getCountSetsPlayer2() > 1))) {
