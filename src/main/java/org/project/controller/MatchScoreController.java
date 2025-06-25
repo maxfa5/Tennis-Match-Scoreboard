@@ -32,6 +32,8 @@ public class MatchScoreController {
     private final OngoingMatchesService ongoingMatchesService;
     private final MatchScoreCalculationService matchScoreCalculationService;
     private final FinishedMatchesPersistenceService finishedMatchesPersistenceService;
+    private static final int PAGE_SIZE = 5;
+    
     @Autowired
     public MatchScoreController(OngoingMatchesService ongoingMatchesService, FinishedMatchesPersistenceService finishedMatchesPersistenceService, MatchScoreCalculationService matchScoreCalculationService){
         this.ongoingMatchesService =ongoingMatchesService;
@@ -103,7 +105,7 @@ public class MatchScoreController {
         model.addAttribute("matches", matches);
         model.addAttribute("pageNumber", pageNumber);
         model.addAttribute("playerName", playerName);
-        boolean hasNextPage = matches.size() == 5;
+        boolean hasNextPage = matches.size() == PAGE_SIZE;
         model.addAttribute("hasNextPage", hasNextPage);
         return "matches";
     }

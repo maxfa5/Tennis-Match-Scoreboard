@@ -1,16 +1,13 @@
 package org.project.service;
 
 import org.project.DTO.CreateMatchDTO;
-import org.project.DTO.IncrementScoreDTO;
-import org.project.model.FinishedMatch;
+
 import org.project.model.OngoingMatch;
 import org.project.model.Player;
-import org.project.repository.FinishedMatchRepository;
 import org.project.repository.PlayerRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.List;
 import java.util.UUID;
 import java.util.concurrent.ConcurrentHashMap;
 
